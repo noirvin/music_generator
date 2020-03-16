@@ -28,12 +28,12 @@ Dates 3/16-3/25
 
 ## Skateboard
 
-**Work with libraries/APIs to extract data from midi/audio files**
+**Work with libraries/APIs to extract data from midi/audio files to randomly generate a sound, deploy to heroku**
 
 
 ## Bike
 
-**feed the data into a markov chain to generate composition, add crud for each genearated track, make it a flask web-app, deploy to heroku**
+**feed the data into a markov chain to generate composition, add crud for each generated track, make it a flask web-app**
 
 
 ## Car
