@@ -17,7 +17,7 @@ class MidiParser:
 
         self.tempo = None
 
-        self.markov_chain = MarkovChain
+        self.chain = None
 
     def parse(self):
 
@@ -45,10 +45,33 @@ class MidiParser:
                     if msg.time is 0:
                         curr.append(msg.note)
                     else:
-                        self.make_transition(prev,curr,msg.time)
+                        print(prev,curr,msg.time)
+                        self.make_transition(prev,curr,self.millisecond(msg.time))
+                    prev = curr
+                    curr = []
 
-    def make_transition(prev,curr,time):
+
+    def make_transition(self,prev,curr,time):
         """
-        inserts alk state transition possibilities into markov
+        inserts all state transition possibilities into markov
 
         """
+
+        for i in prev:
+            for j in curr:
+                midi_data= [i,j,self.millisecond(time)]
+                self.chain=MarkovChain(midi_data)
+
+
+    def millisecond(self,ticks):
+        """
+        tick to millisecond converter
+        """
+        milli = ((ticks / self.ticks) * self.tempo) / 1000
+        return int(milli - (milli % 250) + 250)
+
+
+if __name__ == "__main__":
+
+    test= MidiParser("mozart_eine_kleine.mid")
+    test.parse()

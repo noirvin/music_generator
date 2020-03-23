@@ -1,12 +1,12 @@
 #!python
 from __future__ import division, print_function
 import random # Python 2 and 3 compatibility
-
+from collections import namedtuple
 
 class Dictogram(dict):
     """Dictogram is a histogram implemented as a subclass of the dict type."""
 
-    def __init__(self, word_list):
+    def __init__(self, midi_data):
         """Initialize this histogram as a new dict and count given words."""
         super(Dictogram, self).__init__()  # Initialize this as a new dict
         # Add properties to track useful word counts for this histogram
@@ -14,19 +14,20 @@ class Dictogram(dict):
         self.tokens = 0  # Total count of all word tokens in this histogram
         # Count words in given list, if any
         self.dictionary_histogram = dict()
-        if word_list is not None:
-            for word in word_list:
-
-                self.add_count(word)
+        if midi_data[1] is not None:
 
 
+            self.add_count(midi_data[1],midi_data[2])
 
-    def add_count(self, word, count=1):
+
+    Note = namedtuple('Note',['note','time'])
+    def add_count(self, note, time, count=1):
         """ increase the frequency of a word by count"""
-        if word in self.dictionary_histogram:
-            self.dictionary_histogram[word] += count
+        if note in self.dictionary_histogram:
+            self.dictionary_histogram[Note(note,time)] += count
+            print(self.dictionary_histogram[Note(note,time)])
         else:
-            self.dictionary_histogram[word] = count
+            self.dictionary_histogram[Note(note,time)] = count
             self.types += 1
 
         self.tokens += count

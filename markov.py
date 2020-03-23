@@ -16,18 +16,18 @@ class MarkovChain:
     def build_markov(self, midi_data):
         markov_chain = {}
 
-        for i in range(len(midi_data) - 1):
-            #get the current word and the word after
-            current_note = midi_data[i]
-            next_note = midi_data[i+1]
 
-            if current_note in markov_chain.keys(): #already there
-                #get the histogram for that word in the chain
-                histogram = markov_chain[current_note]
-                #add to count
-                histogram.dictionary_histogram[next_note] = histogram.dictionary_histogram.get(next_note, 0) + 1
-            else: #first entry
-                markov_chain[current_note] = Dictogram([next_note])
+        #get the current word and the word after
+        current_note = midi_data[0]
+        next_note = midi_data[1]
+        time = midi_data[2]
+        if current_note in markov_chain.keys(): #already there
+            #get the histogram for that word in the chain
+            histogram = markov_chain[current_note]
+            #add to count
+            histogram.dictionary_histogram[next_note] = histogram.dictionary_histogram.get(next_note, 0) + 1
+        else: #first entry
+            markov_chain[current_note] = Dictogram(midi_data)
 
         return markov_chain
 
@@ -54,9 +54,3 @@ class MarkovChain:
     def print_chain(self):
         for word, histogram in self.markov_chain.items():
             print(word, histogram.dictionary_histogram)
-
-
-
-markov_chain = MarkovChain(["one", "fish", "two", "fish", "red", "fish", "blue", "fish"])
-
-print(markov_chain.walk(10))
