@@ -1,17 +1,22 @@
 import random
 from dictogram import Dictogram
+from collections import Counter, defaultdict, namedtuple
 
+Note = namedtuple('Note', ['note', 'duration'])
 
 class MarkovChain:
 
-    def __init__(self, midi_data):
+
+    def __init__(self):
 
 
         #The Markov chain will be a dictionary of dictionaries
         #Example: for "one fish two fish red fish blue fish"
         #{"one": {fish:1}, "fish": {"two":1, "red":1, "blue":1}, "two": {"fish":1}, "red": {"fish":1}, "blue": {"fish:1"}}
-         self.markov_chain = self.build_markov(midi_data)
-         self.first_note = list(self.markov_chain.keys())[0]
+         self.markov_chain = defaultdict(Counter)
+         self.sums = defaultdict(int)
+
+
 
     def build_markov(self, midi_data):
         markov_chain = {}
@@ -31,21 +36,26 @@ class MarkovChain:
 
         return markov_chain
 
-    def generate_music(self, num_notes):
+    def add(self, from_note, to_note, duration):
+        self.markov_chain[from_note][self.get_tuple(to_note, duration)] += 1
+        self.sums[from_note]+=1
 
-        with mido.midifiles.MidiFile() as midi:
-            track = mido.MidiTrack()
-            note = list(self.markov_chain.keys())[random.randrange(len(self.markov_chain)-1)]
 
-        for _ in range(num_notes,out_filename):
-            chain = self.markov_chain[note]
-            next_note = chain.gen_rand_note(note)
-            track.extend(next_note)
-            note = next_note
+    def get_tuple(self, note, duration):
+        return Note(note, duration)
 
-        midi.tracks.append(track)
-        midi.save(out_filename)
 
+
+
+    def next_note(self, first_note):
+        if first_note ==  None or first_note not in self.markov_chain:
+            random_chain = self.markov_chain[random.choice(list(self.markov_chain.keys()))]
+            return random.choice(list(random_chain.keys()))
+        next_note_counter = random.randint(0, self.sums[first_note])
+        for note, frequency in self.markov_chain[first_note].items():
+            next_note_counter -= frequency
+            if next_note_counter <= 0:
+                return note
 
 
 
