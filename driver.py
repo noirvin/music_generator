@@ -28,6 +28,6 @@ def generate_music(chain, num_notes, out_filename):
 
 if __name__ == "__main__":
 
-    chain = MidiParser("fur_elise.mid").get_markov()
+    chain = MidiParser(sys.argv[1]).get_markov()
 
-    generate_music(chain,100,"test2.mid")
+    generate_music(chain,100,"test3.mid")

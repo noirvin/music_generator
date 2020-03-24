@@ -4,6 +4,8 @@
 import hashlib
 import mido
 import argparse
+from midi_info import get_tempo
+
 
 from markov import MarkovChain
 
@@ -15,7 +17,7 @@ class MidiParser:
 
         self.ticks = None
 
-        self.tempo = 379747
+        self.tempo = get_tempo(filename)
 
         self.chain = MarkovChain()
         self.parse()
@@ -41,10 +43,7 @@ class MidiParser:
 
             for msg in track:
 
-                if msg.type is 'set_tempo':
-                    self.tempo = msg.tempo
-
-                elif msg.type is 'note_on':
+                if msg.type is 'note_on':
                     if msg.time is 0:
                         curr.append(msg.note)
 
